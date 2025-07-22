@@ -1,0 +1,67 @@
+Index
+=====================================
+create index movie_id_index on movies(movieid);
+create index rating_movie_id_index on ratings(movieid);
+
+Explain ANALYSE select m.movieid, m.title, r.userid, r.rating from movies m
+INNER JOIN
+ratings r on m.movieid=r.movieid
+where m.movieid=2 and r.rating>4
+
+
+select pg_size_pretty(pg_table_size('movies')) as movietable,
+pg_size_pretty(pg_table_size('ratings')) as ratingtable,
+pg_size_pretty(pg_total_relation_size('movies')) as total_relation_size;
+
+
+FUNCTION
+==========================
+
+1. create or replace function myFunction(a INT, b INT)
+RETURNS INT AS $$
+BEGIN 
+	RETURN a+b;
+END;
+$$ LANGUAGE plpgsql
+
+
+select myFunction(10,25);
+
+
+create or replace function myFunction3(eid INT)
+RETURNS TABLE(id INT, name1 varchar(50), dob1 DATE) AS $$
+BEGIN 
+	RETURN QUERY SELECT empid, name, dob from employee where empid=eid ;
+END;
+$$ LANGUAGE plpgsql
+
+
+select myFunction3(1005);
+
+Roles
+======================================
+
+select * from pg_roles;
+
+select current_role;
+
+select * from employee;
+
+create role sales with LOGIN NOSUPERUSER;
+
+create role marketing with NOLOGIN;
+
+GRANT marketing to sales;
+
+select r1.rolname AS role_member,
+r2.rolname as group_role from pg_auth_members m join pg_roles r1 on m.member=r1.oid
+join pg_roles r2 ON m.roleid=r2.oid where r1.rolname='sales';
+
+set role sales;
+select current_role;
+
+select * from information_schema.schemata;
+
+GRANT SELECT ON ALL TABLES IN SCHEMA public to marketing;
+
+
