@@ -13,9 +13,12 @@ import com.cg.exception.EmployeeNotFoundException;
 
 @Service
 public class EmployeeService implements IEmployeeService {
-	@Autowired
+	//@Autowired
 	private IEmployeeRepo repo;
 
+	public EmployeeService(IEmployeeRepo repo) {
+		this.repo = repo;
+	}
 	public EmployeeDto createEmployee(EmployeeDto e) {
 		Employee emp = new Employee();
 		emp.setEmpid(e.getEmpid());
